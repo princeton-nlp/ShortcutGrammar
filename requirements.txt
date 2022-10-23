@@ -1,0 +1,9 @@
+git+https://github.com/harvardnlp/pytorch-struct
+nltk
+numpy
+pandas
+scikit-learn
+scipy
+tokenizers
+torch
+tqdm
