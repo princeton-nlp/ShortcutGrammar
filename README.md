@@ -1,6 +1,6 @@
 # Finding Dataset Shortcuts with Grammar Induction
 
-This repository contains our code for using grammar induction to find shortcuts in NLP datasets, described in our EMNLP 2022 paper, [Finding Dataset Shortcuts with Grammar Induction](TODO).
+This repository contains our code for using grammar induction to find shortcuts in NLP datasets, described in our EMNLP 2022 paper, [Finding Dataset Shortcuts with Grammar Induction](https://arxiv.org/abs/2210.11560).
 The code can be used to induce context free grammars for text classification datasets and synchronous CFGs for sentence-pair classification datasets, and then search the grammar to find discriminative features.
 Please see our paper for more details.
 
