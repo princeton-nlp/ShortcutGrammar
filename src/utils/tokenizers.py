@@ -19,6 +19,8 @@ logger = logging.get_logger(__name__)
 
 
 def word_tokenizer_name(dataset, vocab_size, min_frequency):
+    if dataset.endswith(".json"):
+        dataset = dataset[:-len(".json")]
     return f"{dataset}WordTokenizer_v{vocab_size}_f{min_frequency}"
 
 
@@ -124,7 +126,10 @@ def get_word_tokenizer(
     overwrite_cache=False,
 ):
     tokenizer_name = word_tokenizer_name(name, vocab_size, min_frequency)
-    cache_fn = (Path(data_dir) / name / tokenizer_name).with_suffix(".json")
+    if name.endswith(".json"):
+        cache_fn = Path(tokenizer_name).with_suffix(".json")
+    else:
+        cache_fn = (Path(data_dir) / name / tokenizer_name).with_suffix(".json")
     if not cache_fn.exists() or overwrite_cache:
         word_tokenizer = build_word_tokenizer(
             name,
