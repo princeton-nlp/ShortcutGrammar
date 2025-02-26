@@ -178,6 +178,21 @@ def remove_special_tokens(dataset):
     return dataset
 
 
+def load_examples(name, split, data_dir="data"):
+    if name.endswith(".json"):
+        fn = Path(name)
+        dataset_name = str(fn.with_suffix(""))
+        return load_json(fn)
+    elif name.endswith(".tsv"):
+        fn = Path(name)
+        dataset_name = str(fn.with_suffix(""))
+        return load_tsv(fn)
+    else:
+        fn = Path(data_dir) / name / split
+        dataset_name = name
+        return load_tsv(fn)
+
+
 def load_dataset(
     name,
     split,
@@ -194,18 +209,7 @@ def load_dataset(
     use_product_length=False,
     **kwargs,
 ):
-    if name.endswith(".json"):
-        fn = Path(name)
-        dataset_name = str(fn.with_suffix(""))
-        examples = load_json(fn)
-    elif name.endswith(".tsv"):
-        fn = Path(name)
-        dataset_name = str(fn.with_suffix(""))
-        examples = load_tsv(fn)
-    else:
-        fn = Path(data_dir) / name / split
-        dataset_name = name
-        examples = load_tsv(fn)
+    examples = load_examples(name, split, data_dir)
     cache = cache_fn(name, split, tokenizer)
     if cache_dir and cache.exists() and not overwrite_cache:
         logger.debug(f"loading processed examples from {cache}")

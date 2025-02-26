@@ -85,7 +85,7 @@ def get_preprocessor():
 def build_word_tokenizer(
     name, vocab_size=20000, min_frequency=3, data_dir="data"
 ):
-    examples = data_utils.load_tsv(Path(data_dir) / name / "train")
+    examples = data_utils.load_examples(name, "train", data_dir)
     logger.info(f"building word tokenizer from {len(examples)} {name} examples")
     normalizer = normalizers.BertNormalizer(lowercase=True)
     pre_tokenizer = pre_tokenizers.Sequence([pre_tokenizers.BertPreTokenizer()])
