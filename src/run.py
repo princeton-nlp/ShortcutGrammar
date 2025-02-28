@@ -154,21 +154,17 @@ def run_train(args, train_dataset, dev_datasets, eval_datasets):
         )
         train_dataset = data_utils.distributed_dataset(train_dataset)
         dev_datasets = {
-            k: data_utils.distributed_dataset(v)
-            for k, v in dev_datasets.items()
+            k: data_utils.distributed_dataset(v) for k, v in dev_datasets.items()
         }
         if eval_datasets:
             eval_datasets = {
-                k: data_utils.distributed_dataset(v)
-                for k, v in eval_datasets.items()
+                k: data_utils.distributed_dataset(v) for k, v in eval_datasets.items()
             }
 
     if args.load_from:
         trainer.load_from(args, args.load_from, model)
 
-    train_results = trainer.train(
-        args, model, tokenizer, train_dataset, dev_datasets
-    )
+    train_results = trainer.train(args, model, tokenizer, train_dataset, dev_datasets)
     model_utils.sync_processes()
 
     eval_results = None
@@ -205,9 +201,7 @@ def run_eval(args, eval_datasets):
                 eval_datasets[name] = data_utils.distributed_dataset(
                     eval_datasets[name]
                 )
-    eval_results, _ = trainer.evaluate(
-        args, model, tokenizer, eval_datasets, ckp=""
-    )
+    eval_results, _ = trainer.evaluate(args, model, tokenizer, eval_datasets, ckp="")
     return eval_results
 
 
@@ -265,9 +259,7 @@ if __name__ == "__main__":
     if local_world_size > 1:
         rank = int(os.environ.get("RANK", 0))
         torch.cuda.set_device(rank)
-        torch.distributed.init_process_group(
-            backend="nccl", init_method="env://"
-        )
+        torch.distributed.init_process_group(backend="nccl", init_method="env://")
     else:
         rank = 0
 

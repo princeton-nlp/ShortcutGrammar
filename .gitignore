@@ -7,4 +7,5 @@ notebooks/.ipynb_checkpoints/*
 old_notebooks/*
 output/*
 src.egg-info/*
-
+.local/*
+bin/*

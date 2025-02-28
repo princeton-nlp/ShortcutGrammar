@@ -118,9 +118,12 @@ class Trainer:
                 with open(Path(args.output_dir) / f"best.json", "w") as f:
                     json.dump(best, f, indent=2)
                 for dataset, preds in predictions.items():
+                    dataset_name = str(Path(dataset).with_suffix("")).replace(
+                        "/", "_"
+                    )
                     with open(
                         Path(args.output_dir)
-                        / f"best_predictions.{dataset}.json",
+                        / f"best_predictions.{dataset_name}.json",
                         "w",
                     ) as f:
                         json.dump(predictions, f, indent=2)

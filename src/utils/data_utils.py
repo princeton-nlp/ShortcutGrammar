@@ -67,12 +67,8 @@ def process_sentences(sentences, tokenizer, max_length=128):
 
 
 def process_sentence_pairs(sentence_pairs, tokenizer, max_length=128):
-    a_s = process_sentences(
-        [p["a"] for p in sentence_pairs], tokenizer, max_length
-    )
-    b_s = process_sentences(
-        [p["b"] for p in sentence_pairs], tokenizer, max_length
-    )
+    a_s = process_sentences([p["a"] for p in sentence_pairs], tokenizer, max_length)
+    b_s = process_sentences([p["b"] for p in sentence_pairs], tokenizer, max_length)
     return [
         asdict(SentencePair(p["uid"], a, b, p.get("label", None)))
         for p, a, b in zip(sentence_pairs, a_s, b_s)
@@ -80,9 +76,7 @@ def process_sentence_pairs(sentence_pairs, tokenizer, max_length=128):
 
 
 def cache_fn(name, split, tokenizer, cache_dir="cache"):
-    return (Path(cache_dir) / split / name).with_suffix(
-        "." + tokenizer.__class__.__name__ + ".pkl"
-    )
+    return Path(cache_dir) / f"{name}_{split}_{tokenizer.__class__.__name__}.pkl"
 
 
 def num_labels(name):
@@ -139,7 +133,7 @@ def load_tsv(fn):
         if "label_name" in row:
             e["label_name"] = row["label_name"]
         if "review_id" in row:
-            d["details"] = {"original_uid": row["review_id"]}
+            e["details"] = {"original_uid": row["review_id"]}
         examples.append(e)
     return examples
 
@@ -181,15 +175,15 @@ def remove_special_tokens(dataset):
 def load_examples(name, split, data_dir="data"):
     if name.endswith(".json"):
         fn = Path(name)
-        dataset_name = str(fn.with_suffix(""))
+        name = str(fn.with_suffix(""))
         return load_json(fn)
     elif name.endswith(".tsv"):
         fn = Path(name)
-        dataset_name = str(fn.with_suffix(""))
+        name = str(fn.with_suffix(""))
         return load_tsv(fn)
     else:
         fn = Path(data_dir) / name / split
-        dataset_name = name
+        name = name
         return load_tsv(fn)
 
 
@@ -242,7 +236,7 @@ def load_dataset(
         processed = [e for e in processed if e["uid"] in uids]
         logger.info(f"picked {len(examples)} examples")
 
-    dataset = GenericDataset(dataset_name, examples, processed)
+    dataset = GenericDataset(name, examples, processed)
 
     if remove_special:
         logger.info(f"removing special tokens ({name}/{split})")
